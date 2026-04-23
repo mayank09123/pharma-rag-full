@@ -1,0 +1,25 @@
+version: "3.9"
+
+services:
+  rag-api:
+    build:
+      context: ../../
+      dockerfile: mlops/docker/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - chroma_data:/app/chroma_db
+    restart: unless-stopped
+
+  chromadb:
+    image: chromadb/chroma:latest
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    restart: unless-stopped
+
+volumes:
+  chroma_data:
