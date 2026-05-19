@@ -3,7 +3,6 @@ Pharma RAG Chatbot
 
 Author: Mayank Pratap Singh Chauhan 
 
-Author: Mayank Pratap Singh Chauhan 
 
 Run: python -m streamlit run chatbot_app.py
 """
@@ -188,7 +187,6 @@ with st.sidebar:
 
     st.caption("Mayank Pratap Singh Chauhan ")
 
-    st.caption("Mayank Pratap Singh Chauhan  ")
 
     st.divider()
 
@@ -374,6 +372,6 @@ if (send or pending) and question:
 # ── Footer ────────────────────────────────────────────────────────────────
 st.markdown(
     "<br><center><small style='color:#9CA3AF'>Built on FDA DailyMed · GPT-4o · ChromaDB · "
-    "Binghamton University, SUNY · 2025</small></center>",
+    " 2025</small></center>",
     unsafe_allow_html=True,
 )
