@@ -1,0 +1,72 @@
+{
+  "warfarin": {
+    "set_id": "884cdbf6-0a52-4126-8e14-b0d7c9367e33",
+    "published_date": "",
+    "content_hash": "ea0ea1386ecb54981c1b83b50bf32591",
+    "last_checked": "2026-05-18T08:38:02.502725",
+    "last_updated": "2026-05-18T08:37:35.670509"
+  },
+  "metformin": {
+    "set_id": "93c8deae-3103-4cbf-a5d1-fe0d37e76df8",
+    "published_date": "",
+    "content_hash": "bf783dbb2de185e9eadccdcbb8b2cf6f",
+    "last_checked": "2026-05-18T08:38:03.327622",
+    "last_updated": "2026-05-18T08:37:37.053937"
+  },
+  "lisinopril": {
+    "set_id": "350c6fc9-9774-4d49-9242-19e96944f83b",
+    "published_date": "",
+    "content_hash": "32aa991ad252323d8c5512582c9ba8f0",
+    "last_checked": "2026-05-18T08:38:04.475761",
+    "last_updated": "2026-05-18T08:37:39.073331"
+  },
+  "aspirin": {
+    "set_id": "56c125de-fabf-41fa-88a4-760d2793f202",
+    "published_date": "",
+    "content_hash": "e291e6f442146fe4965516cd48175e0b",
+    "last_checked": "2026-05-18T08:38:05.512686",
+    "last_updated": "2026-05-18T08:37:40.197991"
+  },
+  "atorvastatin": {
+    "set_id": "46df076d-4e98-6faa-e054-00144ff8d46c",
+    "published_date": "",
+    "content_hash": "94671ca26d798f56b66507a1a7ec70bc",
+    "last_checked": "2026-05-18T08:38:06.550405",
+    "last_updated": "2026-05-18T08:37:43.379584"
+  },
+  "amoxicillin": {
+    "set_id": "4fb7837e-964c-4d38-a3a5-b384b1bd6e08",
+    "published_date": "",
+    "content_hash": "4c1298911ef46ddee8a1ed8d49b37732",
+    "last_checked": "2026-05-18T08:38:07.648958",
+    "last_updated": "2026-05-18T08:37:45.012079"
+  },
+  "ibuprofen": {
+    "set_id": "13fd4401-1821-4f2b-a44e-96aa2fa75b5c",
+    "published_date": "",
+    "content_hash": "a8044529e131e9504f5e07e859e4e5f2",
+    "last_checked": "2026-05-18T08:38:08.742132",
+    "last_updated": "2026-05-18T08:37:46.757216"
+  },
+  "metoprolol": {
+    "set_id": "51b630c7-6c03-7876-e063-6294a90acb30",
+    "published_date": "",
+    "content_hash": "c0b1e468049199c49c6bc0b4b1c698c1",
+    "last_checked": "2026-05-18T08:38:09.671201",
+    "last_updated": "2026-05-18T08:37:48.540961"
+  },
+  "amlodipine": {
+    "set_id": "fe91d607-5e1f-48e4-e053-6294a90ac522",
+    "published_date": "",
+    "content_hash": "ec6c019d732dd0d8a38b25fd68c46581",
+    "last_checked": "2026-05-18T08:38:10.613816",
+    "last_updated": "2026-05-18T08:37:49.621091"
+  },
+  "omeprazole": {
+    "set_id": "b3ec4a44-5643-4438-b41b-e04946436719",
+    "published_date": "",
+    "content_hash": "a49678a9ea96bfda355ff6c7a69620a3",
+    "last_checked": "2026-05-18T08:38:11.741941",
+    "last_updated": "2026-05-18T08:37:50.648976"
+  }
+}

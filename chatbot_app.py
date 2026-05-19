@@ -1,6 +1,10 @@
 """
 Pharma RAG Chatbot
+
 Author: Mayank Pratap Singh Chauhan 
+
+Author: Mayank Pratap Singh Chauhan 
+
 Run: python -m streamlit run chatbot_app.py
 """
 import sys, os, time
@@ -28,8 +32,11 @@ st.markdown("""
 * { font-family: 'Inter', sans-serif; }
 
 /* Hide default streamlit header */
-#MainMenu, footer, header { visibility: hidden; }
-
+#MainMenu, footer { visibility: hidden; }
+section[data-testid="stSidebar"] {
+    min-width: 320px !important;
+    max-width: 320px !important;
+}
 /* Chat container */
 .chat-header {
     background: linear-gradient(135deg, #0B1F3A 0%, #007A6E 100%);
@@ -178,7 +185,11 @@ if "input_key" not in st.session_state:
 # ── Sidebar ───────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("### 💊 Pharma RAG Chat")
+
     st.caption("Mayank Pratap Singh Chauhan ")
+
+    st.caption("Mayank Pratap Singh Chauhan  ")
+
     st.divider()
 
     # Mode switcher
@@ -275,7 +286,7 @@ for msg in st.session_state.messages:
         for flag in msg.get("flags", []):
             flags_html += f'<span class="flag-badge">⚠️ {flag[:50]}</span>'
         if not msg.get("flags"):
-            flags_html = '<span class="clean-badge">Compliant</span>'
+            flags_html = '<span class="clean-badge">✅ Compliant</span>'
 
         st.markdown(f"""
         <div class="bot-bubble">

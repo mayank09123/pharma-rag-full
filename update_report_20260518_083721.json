@@ -1,0 +1,78 @@
+{
+  "run_at": "2026-05-18T08:37:21.058799",
+  "updated": [
+    "warfarin",
+    "metformin",
+    "lisinopril",
+    "aspirin",
+    "atorvastatin",
+    "amoxicillin",
+    "ibuprofen",
+    "metoprolol",
+    "amlodipine",
+    "omeprazole"
+  ],
+  "failed": [],
+  "changes": [
+    {
+      "drug": "warfarin",
+      "changed": true,
+      "reason": "new drug",
+      "set_id": "884cdbf6-0a52-4126-8e14-b0d7c9367e33"
+    },
+    {
+      "drug": "metformin",
+      "changed": true,
+      "reason": "new drug",
+      "set_id": "93c8deae-3103-4cbf-a5d1-fe0d37e76df8"
+    },
+    {
+      "drug": "lisinopril",
+      "changed": true,
+      "reason": "new drug",
+      "set_id": "350c6fc9-9774-4d49-9242-19e96944f83b"
+    },
+    {
+      "drug": "aspirin",
+      "changed": true,
+      "reason": "new drug",
+      "set_id": "56c125de-fabf-41fa-88a4-760d2793f202"
+    },
+    {
+      "drug": "atorvastatin",
+      "changed": true,
+      "reason": "new drug",
+      "set_id": "46df076d-4e98-6faa-e054-00144ff8d46c"
+    },
+    {
+      "drug": "amoxicillin",
+      "changed": true,
+      "reason": "new drug",
+      "set_id": "4fb7837e-964c-4d38-a3a5-b384b1bd6e08"
+    },
+    {
+      "drug": "ibuprofen",
+      "changed": true,
+      "reason": "new drug",
+      "set_id": "13fd4401-1821-4f2b-a44e-96aa2fa75b5c"
+    },
+    {
+      "drug": "metoprolol",
+      "changed": true,
+      "reason": "new drug",
+      "set_id": "51b630c7-6c03-7876-e063-6294a90acb30"
+    },
+    {
+      "drug": "amlodipine",
+      "changed": true,
+      "reason": "new drug",
+      "set_id": "fe91d607-5e1f-48e4-e053-6294a90ac522"
+    },
+    {
+      "drug": "omeprazole",
+      "changed": true,
+      "reason": "new drug",
+      "set_id": "b3ec4a44-5643-4438-b41b-e04946436719"
+    }
+  ]
+}
