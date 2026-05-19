@@ -186,8 +186,6 @@ with st.sidebar:
     st.markdown("### 💊 Pharma RAG Chat")
 
     st.caption("Mayank Pratap Singh Chauhan ")
-
-
     st.divider()
 
     # Mode switcher
@@ -248,7 +246,7 @@ with st.sidebar:
 st.markdown("""
 <div class="chat-header">
   <h1>💊 Pharma RAG Chatbot</h1>
-  <p>Grounded answers from FDA-approved drug labeling · Binghamton University, SUNY · 2025</p>
+  <p>Grounded answers from FDA-approved drug Label 2025</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -372,6 +370,7 @@ if (send or pending) and question:
 # ── Footer ────────────────────────────────────────────────────────────────
 st.markdown(
     "<br><center><small style='color:#9CA3AF'>Built on FDA DailyMed · GPT-4o · ChromaDB · "
-    " 2025</small></center>",
+"· 2025</small></center>",
+
     unsafe_allow_html=True,
 )

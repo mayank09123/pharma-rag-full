@@ -202,6 +202,6 @@ if run:
 st.divider()
 st.markdown(
     "<center><small>Built on FDA DailyMed · GPT-4o · ChromaDB · "
-    ". 2025</small></center>",
+    " · 2025</small></center>",
     unsafe_allow_html=True
 )
