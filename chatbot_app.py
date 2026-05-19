@@ -1,7 +1,6 @@
 """
 Pharma RAG Chatbot
-Author: Mayank Pratap Singh Chauhan (B01098725)
-Advisor: Prof. Sujoy Sikdar
+Author: Mayank Pratap Singh Chauhan 
 Run: python -m streamlit run chatbot_app.py
 """
 import sys, os, time
@@ -179,7 +178,7 @@ if "input_key" not in st.session_state:
 # ── Sidebar ───────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("### 💊 Pharma RAG Chat")
-    st.caption("Mayank Pratap Singh Chauhan (B01098725)  \nAdvisor: Prof. Sujoy Sikdar")
+    st.caption("Mayank Pratap Singh Chauhan ")
     st.divider()
 
     # Mode switcher
