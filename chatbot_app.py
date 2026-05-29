@@ -46,7 +46,7 @@ section[data-testid="stSidebar"]{
 }
 section[data-testid="stSidebar"]>div{background:transparent!important;padding:0!important;}
 [data-testid="collapsedControl"]{
-    display:flex!important;
+    display:none!important;
     width:40px!important;
     height:40px!important;
     background:rgba(0,180,160,0.1)!important;
@@ -403,25 +403,27 @@ mode_cfg = MODES[mode]
 # Hero header
 hc1, hc2 = st.columns([4,1])
 with hc1:
-    st.markdown(f"""
-    <div class="hero">
-        <div class="hero-inner">
-            <div>
-                <h2 class="hero-title">
-                    Pharma RAG Chatbot
-                    <span class="live-pill"><span class="live-dot"></span>Live · FDA Data</span>
-                </h2>
-                <p class="hero-sub">FDA DailyMed · GPT-4o · ChromaDB  2025</p>
-                <div class="hero-stats">
-                    <div class="hstat"><div class="hstat-dot" style="background:#00B4A0;"></div>679 chunks loaded</div>
-                    <div class="hstat"><div class="hstat-dot" style="background:#85B7EB;"></div>0.96 eval score</div>
-                    <div class="hstat"><div class="hstat-dot" style="background:#EF9F27;"></div>Zero hallucinations</div>
-                </div>
-            </div>
-        </div>
-    </div>
+    # Sidebar toggle button always visible
+    st.markdown("""
+    <button onclick="
+        var btn = window.parent.document.querySelector('[data-testid=collapsedControl]');
+        if(btn) btn.click();
+    " style="
+        position:fixed;
+        top:16px;
+        left:16px;
+        z-index:9999;
+        background:rgba(0,180,160,0.15);
+        border:1px solid rgba(0,180,160,0.3);
+        border-radius:10px;
+        width:36px;height:36px;
+        cursor:pointer;
+        color:#00B4A0;
+        font-size:1.1rem;
+        display:flex;align-items:center;justify-content:center;
+        transition:all 0.2s ease;
+    " title="Toggle sidebar">☰</button>
     """, unsafe_allow_html=True)
-with hc2:
     st.markdown(f"""
     <div style="padding:20px 20px 0 0;text-align:right;">
         <span class="mbadge mb-{mode}">{mode_cfg['icon']} {mode_cfg['name']}</span>
