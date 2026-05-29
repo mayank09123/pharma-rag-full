@@ -4,23 +4,26 @@ Author: Mayank Pratap Singh Chauhan (B01098725)
 Advisor: Prof. Sujoy Sikdar
 Run: python -m streamlit run chatbot_app.py
 """
+import sys, os, time
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 import streamlit as st
-import os, time
-try:
-    if hasattr(st, 'secrets'):
-        st.sidebar.success(f"Secrets found: {list(st.secrets.keys())}")
-        for k, v in st.secrets.items():
-            os.environ[str(k)] = str(v)
-    else:
-        st.sidebar.error("No secrets object found")
-except Exception as e:
-    st.sidebar.error(f"Secrets error: {e}")
+
+# Load .env FIRST (local development)
 from dotenv import load_dotenv
 load_dotenv()
 
+# Then OVERRIDE with Streamlit Cloud secrets (production)
+# This ensures Cloud secrets always win over .env
+try:
+    if hasattr(st, 'secrets'):
+        for k, v in st.secrets.items():
+            os.environ[str(k)] = str(v)  # Force override
+except Exception as e:
+    st.sidebar.error(f"Secrets error: {e}")
+
 from src.retrieval.vector_store import DrugLabelVectorStore
 from src.generation.rag_pipeline import PharmaRAGPipeline, OutputMode
-
 st.set_page_config(
     page_title="Pharma RAG",
     page_icon="💊",
