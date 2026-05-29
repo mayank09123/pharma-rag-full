@@ -361,7 +361,7 @@ with hc1:
                     Pharma RAG Chatbot
                     <span class="live-pill"><span class="live-dot"></span>Live · FDA Data</span>
                 </h2>
-                <p class="hero-sub">FDA DailyMed · GPT-4o · ChromaDB · Binghamton University, SUNY · 2025</p>
+                <p class="hero-sub">FDA DailyMed · GPT-4o · ChromaDB  2025</p>
                 <div class="hero-stats">
                     <div class="hstat"><div class="hstat-dot" style="background:#00B4A0;"></div>679 chunks loaded</div>
                     <div class="hstat"><div class="hstat-dot" style="background:#85B7EB;"></div>0.96 eval score</div>
