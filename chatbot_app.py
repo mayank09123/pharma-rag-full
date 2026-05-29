@@ -46,6 +46,12 @@ section[data-testid="stSidebar"]{
 }
 section[data-testid="stSidebar"]>div{background:transparent!important;padding:0!important;}
 [data-testid="collapsedControl"]{display:none!important;}
+section[data-testid="stSidebar"][aria-expanded="false"]{
+    margin-left:0!important;
+    transform:translateX(0)!important;
+    width:290px!important;
+    min-width:290px!important;
+}
 
 .sb-header{
     padding:22px 18px 16px;
