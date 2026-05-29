@@ -99,11 +99,13 @@ section[data-testid="stSidebar"] .stButton > button:hover {
 }
 
 /* Selectbox */
-section[data-testid="stSidebar"] .stSelectbox > div > div {
-    background: rgba(255,255,255,0.04) !important;
-    border: 1px solid rgba(255,255,255,0.08) !important;
-    border-radius: 10px !important;
-    color: #cbd5e1 !important;
+section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #0a0f1e 0%, #0d1629 50%, #0a1628 100%) !important;
+    border-right: 1px solid rgba(0,180,160,0.15) !important;
+    min-width: 280px !important;
+    width: 280px !important;
+    display: block !important;
+    visibility: visible !important;
 }
 
 /* ═══════════════════════════════════════════
