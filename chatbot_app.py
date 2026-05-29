@@ -8,13 +8,19 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import streamlit as st
 
+# Load Streamlit Cloud secrets BEFORE everything else
 try:
     if hasattr(st, 'secrets'):
         for k, v in st.secrets.items():
             os.environ[str(k)] = str(v)
-except:
+except Exception:
     pass
 
+from dotenv import load_dotenv
+load_dotenv()
+
+from src.retrieval.vector_store import DrugLabelVectorStore
+from src.generation.rag_pipeline import PharmaRAGPipeline, OutputMode
 from dotenv import load_dotenv
 load_dotenv()
 
