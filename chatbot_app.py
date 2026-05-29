@@ -65,18 +65,24 @@ section[data-testid="stSidebar"] div { color: #cbd5e1 !important; }
 .sb-logo-sub { font-size: 0.72rem; color: #64748b !important; margin: 3px 0 0; }
 
 /* Mode buttons */
-section[data-testid="stSidebar"] .stButton > button {
-    background: rgba(255,255,255,0.03) !important;
-    border: 1px solid rgba(255,255,255,0.07) !important;
-    color: #94a3b8 !important;
-    border-radius: 10px !important;
-    padding: 10px 14px !important;
-    font-size: 0.83rem !important;
-    font-weight: 500 !important;
-    text-align: left !important;
-    width: 100% !important;
-    margin-bottom: 5px !important;
-    transition: all 0.2s ease !important;
+/* Lock sidebar - never hide collapse button area */
+[data-testid="collapsedControl"] {
+    display: none !important;
+}
+section[data-testid="stSidebar"] {
+    transform: none !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 280px !important;
+    min-width: 280px !important;
+    position: relative !important;
+    left: 0 !important;
+}
+section[data-testid="stSidebar"][aria-expanded="false"] {
+    margin-left: 0 !important;
+    transform: none !important;
+
 }
 section[data-testid="stSidebar"] .stButton > button:hover {
     background: rgba(0,180,160,0.1) !important;
