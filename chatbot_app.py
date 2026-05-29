@@ -340,11 +340,28 @@ QUESTIONS = {
 # ── SIDEBAR ───────────────────────────────────────────────────────────────
 with st.sidebar:
     mode = st.session_state.mode
+
+    # Close button + header
     st.markdown("""
+    <div style="display:flex;justify-content:flex-end;padding:10px 12px 0;">
+        <button onclick="
+            var btn = window.parent.document.querySelector('[data-testid=collapsedControl]');
+            if(btn) btn.click();
+        " style="
+            background:rgba(0,180,160,0.08);
+            border:1px solid rgba(0,180,160,0.2);
+            border-radius:50%;
+            width:28px;height:28px;
+            cursor:pointer;
+            color:#00B4A0;
+            font-size:0.85rem;
+            display:flex;align-items:center;justify-content:center;
+        ">✕</button>
+    </div>
     <div class="sb-header">
         <div class="sb-icon">💊</div>
         <p class="sb-title">Pharma RAG</p>
-        <p class="sb-sub">Mayank Pratap Singh Chauhan </p>
+        <p class="sb-sub">Mayank Pratap Singh Chauhan</p>
     </div>
     """, unsafe_allow_html=True)
 
