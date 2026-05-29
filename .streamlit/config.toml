@@ -6,3 +6,4 @@ headless = true
 
 [ui]
 hideSidebarNav = false
+showSidebarNavigation = true
