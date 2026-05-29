@@ -14,7 +14,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-st.write("DEBUG OPENAI KEY:", os.getenv("OPENAI_API_KEY"))
 import streamlit as st
 from src.retrieval.vector_store import DrugLabelVectorStore
 from src.generation.rag_pipeline import PharmaRAGPipeline, OutputMode
