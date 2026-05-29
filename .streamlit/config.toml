@@ -4,6 +4,3 @@ base = "dark"
 [server]
 headless = true
 
-[ui]
-hideSidebarNav = false
-showSidebarNavigation = true
