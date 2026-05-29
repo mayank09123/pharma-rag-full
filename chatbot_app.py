@@ -6,11 +6,15 @@ Author: Mayank Pratap Singh Chauhan
 
 Run: python -m streamlit run chatbot_app.py
 """
+import streamlit_startup
 import sys, os, time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
+st.write("DEBUG OPENAI KEY:", os.getenv("OPENAI_API_KEY"))
 import streamlit as st
 from src.retrieval.vector_store import DrugLabelVectorStore
 from src.generation.rag_pipeline import PharmaRAGPipeline, OutputMode
