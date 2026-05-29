@@ -1,29 +1,28 @@
 """
 Pharma RAG Chatbot - Full Beautiful Version
 Author: Mayank Pratap Singh Chauhan (B01098725)
-Advisor: Prof. Sujoy Sikdar
-Run: python -m streamlit run chatbot_app.py
 """
 import sys, os, time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import streamlit as st
 
-# Load .env FIRST (local development)
-from dotenv import load_dotenv
-load_dotenv()
-
-# Then OVERRIDE with Streamlit Cloud secrets (production)
-# This ensures Cloud secrets always win over .env
+# ONLY load from Streamlit secrets - ignore .env completely
 try:
     if hasattr(st, 'secrets'):
         for k, v in st.secrets.items():
-            os.environ[str(k)] = str(v)  # Force override
+            os.environ[str(k)] = str(v)
 except Exception as e:
-    st.sidebar.error(f"Secrets error: {e}")
+    pass
+
+# Only load .env if running locally (no secrets available)
+if not os.environ.get('OPENAI_API_KEY'):
+    from dotenv import load_dotenv
+    load_dotenv()
 
 from src.retrieval.vector_store import DrugLabelVectorStore
 from src.generation.rag_pipeline import PharmaRAGPipeline, OutputMode
+PharmaRAGPipeline, OutputMode
 st.set_page_config(
     page_title="Pharma RAG",
     page_icon="💊",
