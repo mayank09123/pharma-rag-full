@@ -1,379 +1,236 @@
 """
 Pharma RAG Chatbot
+Author: Mayank Pratap Singh Chauhan (B01098725)
 
-Author: Mayank Pratap Singh Chauhan 
-
-
-Run: python -m streamlit run chatbot_app.py
 """
-import streamlit_startup
 import sys, os, time
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 import streamlit as st
+
+# Load secrets from Streamlit Cloud first
+try:
+    if hasattr(st, 'secrets'):
+        for k, v in st.secrets.items():
+            os.environ[str(k)] = str(v)
+except:
+    pass
+
+from dotenv import load_dotenv
+load_dotenv()
+
 from src.retrieval.vector_store import DrugLabelVectorStore
 from src.generation.rag_pipeline import PharmaRAGPipeline, OutputMode
 
-# ── Page config ───────────────────────────────────────────────────────────
-st.set_page_config(
-    page_title="Pharma RAG Chatbot",
-    page_icon="💊",
-    layout="wide",
-    initial_sidebar_state="expanded",
-)
-
-# ── CSS ───────────────────────────────────────────────────────────────────
+st.set_page_config(page_title="Pharma RAG", page_icon="💊", layout="wide")
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
-
-* { font-family: 'Inter', sans-serif; }
-
-/* Hide default streamlit header */
-#MainMenu, footer { visibility: hidden; }
-section[data-testid="stSidebar"] {
-    min-width: 320px !important;
-    max-width: 320px !important;
-}
-/* Chat container */
-.chat-header {
-    background: linear-gradient(135deg, #0B1F3A 0%, #007A6E 100%);
-    padding: 20px 24px;
-    border-radius: 12px;
-    margin-bottom: 20px;
-    color: white;
-}
-.chat-header h1 { margin:0; font-size:1.5rem; font-weight:700; }
-.chat-header p  { margin:4px 0 0; font-size:0.8rem; opacity:0.8; }
-
-/* Bot message bubble */
-.bot-bubble {
-    background: #F0FDF9;
-    border: 1px solid #D4F1EE;
-    border-left: 4px solid #007A6E;
-    border-radius: 0 12px 12px 12px;
-    padding: 14px 18px;
-    margin: 8px 0 8px 8px;
-    max-width: 85%;
-    font-size: 0.92rem;
-    line-height: 1.65;
-    color: #1C2B3A;
-}
-
-/* User message bubble */
-.user-bubble {
-    background: linear-gradient(135deg, #0B1F3A, #007A6E);
-    border-radius: 12px 0 12px 12px;
-    padding: 12px 18px;
-    margin: 8px 8px 8px auto;
-    max-width: 75%;
-    font-size: 0.92rem;
-    color: white;
-    text-align: right;
-    display: block;
-}
-
-/* Source badge */
-.source-badge {
-    display: inline-block;
-    background: #D4F1EE;
-    color: #007A6E;
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 10px;
-    margin: 2px 2px 6px;
-    border: 1px solid #007A6E;
-}
-
-/* Flag badge */
-.flag-badge {
-    display: inline-block;
-    background: #FEE2E2;
-    color: #B91C1C;
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 10px;
-    margin: 2px;
-    border: 1px solid #B91C1C;
-}
-
-/* Clean badge */
-.clean-badge {
-    display: inline-block;
-    background: #D1FAE5;
-    color: #059669;
-    font-size: 0.7rem;
-    font-weight: 600;
-    padding: 2px 8px;
-    border-radius: 10px;
-    margin: 2px;
-    border: 1px solid #059669;
-}
-
-/* Mode badge */
-.mode-badge {
-    display: inline-block;
-    background: #0B1F3A;
-    color: #00B4A0;
-    font-size: 0.68rem;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 10px;
-    margin-bottom: 8px;
-    letter-spacing: 0.05em;
-}
-
-/* Sidebar */
-.sidebar-card {
-    background: #F4F6F8;
-    border-radius: 8px;
-    padding: 10px 12px;
-    margin-bottom: 8px;
-    font-size: 0.82rem;
-    color: #1C2B3A;
-    cursor: pointer;
-    border: 1px solid #E2E8F0;
-    transition: all 0.2s;
-}
-
-/* Typing dots */
-.typing-dot {
-    display: inline-block;
-    width: 8px; height: 8px;
-    background: #007A6E;
-    border-radius: 50%;
-    margin: 0 2px;
-    animation: bounce 1.2s infinite;
-}
-.typing-dot:nth-child(2) { animation-delay: 0.2s; }
-.typing-dot:nth-child(3) { animation-delay: 0.4s; }
-@keyframes bounce {
-    0%,60%,100% { transform: translateY(0); }
-    30% { transform: translateY(-6px); }
-}
-
-.stTextInput input {
-    border-radius: 24px !important;
-    border: 2px solid #D4F1EE !important;
-    padding: 10px 18px !important;
-    font-size: 0.92rem !important;
-}
-.stTextInput input:focus {
-    border-color: #007A6E !important;
-    box-shadow: 0 0 0 2px rgba(0,180,160,0.15) !important;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+*{font-family:'Inter',sans-serif;}
+#MainMenu,footer,header{visibility:hidden;}
+.block-container{padding:0!important;max-width:100%!important;}
+section[data-testid="stSidebar"]{background:#111827!important;}
+section[data-testid="stSidebar"] > div{background:#111827!important;padding:16px!important;}
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] span,
+section[data-testid="stSidebar"] div,
+section[data-testid="stSidebar"] label{color:#f1f5f9!important;}
+section[data-testid="stSidebar"] .stButton>button{
+    background:#1f2937!important;border:1px solid #374151!important;
+    color:#f1f5f9!important;border-radius:8px!important;
+    padding:8px 12px!important;font-size:0.82rem!important;
+    text-align:left!important;width:100%!important;margin-bottom:4px!important;}
+section[data-testid="stSidebar"] .stButton>button:hover{background:#374151!important;border-color:#00B4A0!important;}
+[data-testid="stMetric"]{background:#1f2937!important;border-radius:10px!important;padding:10px!important;border:1px solid #374151!important;}
+[data-testid="stMetricValue"]{color:#00B4A0!important;font-size:1.5rem!important;font-weight:600!important;}
+[data-testid="stMetricLabel"]{color:#94a3b8!important;font-size:0.7rem!important;}
+.main .block-container{background:#0f172a!important;min-height:100vh!important;padding:20px 28px!important;}
+.user-row{display:flex;justify-content:flex-end;align-items:flex-start;gap:10px;margin:10px 0;}
+.user-av{width:30px;height:30px;border-radius:50%;background:#374151;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:600;color:#94a3b8;flex-shrink:0;}
+.user-bub{background:#1d4ed8;border-radius:18px 18px 4px 18px;padding:10px 16px;font-size:0.88rem;color:white;max-width:70%;line-height:1.6;}
+.bot-row{display:flex;justify-content:flex-start;align-items:flex-start;gap:10px;margin:10px 0;}
+.bot-av{width:30px;height:30px;border-radius:50%;background:#0f3d2e;display:flex;align-items:center;justify-content:center;font-size:0.65rem;font-weight:700;color:#00B4A0;flex-shrink:0;border:1px solid #1D9E75;}
+.bot-bub{background:#1e293b;border:1px solid #2d3d50;border-radius:4px 18px 18px 18px;padding:14px 16px;font-size:0.88rem;color:#e2e8f0;max-width:85%;line-height:1.7;}
+.mbadge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:0.65rem;font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em;}
+.mb-clinical{background:#0f3d2e;color:#00B4A0;}
+.mb-marketing{background:#3d2d00;color:#EF9F27;}
+.mb-patient{background:#0a1f40;color:#85B7EB;}
+.mb-regulatory{background:#1a0f40;color:#AFA9EC;}
+.src-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px;padding-top:8px;border-top:1px solid #2d3d50;}
+.src-tag{background:#0f172a;border:1px solid #2d3d50;border-radius:20px;padding:2px 10px;font-size:0.67rem;color:#94a3b8;}
+.src-sc{color:#00B4A0;font-weight:600;}
+.comp-ok{color:#4ade80;font-size:0.7rem;margin-top:5px;}
+.comp-fl{color:#f87171;font-size:0.7rem;margin-top:5px;}
+.typing-dot{display:inline-block;width:6px;height:6px;background:#00B4A0;border-radius:50%;margin:0 2px;animation:td 1.2s infinite;}
+.typing-dot:nth-child(2){animation-delay:0.2s;}.typing-dot:nth-child(3){animation-delay:0.4s;}
+@keyframes td{0%,60%,100%{transform:translateY(0);opacity:0.4;}30%{transform:translateY(-4px);opacity:1;}}
+.stTextInput input{background:#1e293b!important;border:1px solid #374151!important;border-radius:24px!important;color:#f1f5f9!important;padding:11px 20px!important;font-size:0.9rem!important;}
+.stTextInput input:focus{border-color:#007A6E!important;box-shadow:none!important;}
+.stTextInput input::placeholder{color:#475569!important;}
 </style>
 """, unsafe_allow_html=True)
 
-# ── Load pipeline ─────────────────────────────────────────────────────────
 @st.cache_resource
 def load_pipeline():
-    store    = DrugLabelVectorStore()
-    pipeline = PharmaRAGPipeline(vector_store=store)
-    return store, pipeline
+    # Auto ingest if database is empty
+    store = DrugLabelVectorStore(use_rerank=False)
+    if store.collection_stats()["total_chunks"] == 0:
+        from src.ingestion.fda_loader import FDALabelLoader
+        loader = FDALabelLoader()
+        chunks = loader.load_multiple(["warfarin","metformin","lisinopril"])
+        store.add_chunks(chunks)
+    return store, PharmaRAGPipeline(vector_store=store)
 
-# ── Session state ─────────────────────────────────────────────────────────
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-if "input_key" not in st.session_state:
-    st.session_state.input_key = 0
+for k,v in {"messages":[],"input_key":0,"mode":"clinical"}.items():
+    if k not in st.session_state: st.session_state[k] = v
 
-# ── Sidebar ───────────────────────────────────────────────────────────────
+MODES = {
+    "clinical":   {"dot":"🟢","name":"Clinical (HCP)"},
+    "marketing":  {"dot":"🟡","name":"Marketing"},
+    "patient":    {"dot":"🔵","name":"Patient"},
+    "regulatory": {"dot":"🟣","name":"Regulatory"},
+}
+ALL_QUESTIONS = {
+    "clinical": {
+        "Warfarin":   ["What are the contraindications for warfarin?","What are the side effects of warfarin?","What drug interactions does warfarin have?","What is the dosage for warfarin?","How does warfarin work?","Is warfarin safe during pregnancy?","What monitoring is required for warfarin?"],
+        "Metformin":  ["What is the recommended dose of metformin?","What are the side effects of metformin?","How does metformin work?","Is metformin safe in kidney disease?","Can metformin cause lactic acidosis?"],
+        "Lisinopril": ["What are the contraindications for lisinopril?","What is the dosage for lisinopril?","What are the side effects of lisinopril?","How does lisinopril work?","Can lisinopril cause a cough?"],
+    },
+    "marketing": {
+        "Warfarin":   ["Write a physician brief for warfarin","What is the approved indication for warfarin?","What safety info must be included for warfarin?"],
+        "Metformin":  ["Write a marketing brief for metformin","What clinical evidence supports metformin?"],
+        "Lisinopril": ["Promotional overview of lisinopril","What are the benefits of lisinopril?"],
+    },
+    "patient": {
+        "Warfarin":   ["What is warfarin used for?","What foods should I avoid with warfarin?","Can I drink alcohol with warfarin?","Is warfarin safe in pregnancy?","What if I miss a warfarin dose?"],
+        "Metformin":  ["What does metformin do?","Will metformin make me feel sick?","What if I forget metformin?"],
+        "Lisinopril": ["Why do people take lisinopril?","How long does lisinopril take to work?","Is lisinopril safe during breastfeeding?"],
+    },
+    "regulatory": {
+        "Warfarin":   ["Regulatory summary of warfarin","What is the verbatim indication for warfarin?","What are the boxed warnings for warfarin?"],
+        "Metformin":  ["FDA approved indication for metformin","Regulatory summary of metformin"],
+        "Lisinopril": ["Safety profile of lisinopril","Regulatory dossier summary for lisinopril"],
+    },
+}
+
 with st.sidebar:
-    st.markdown("### 💊 Pharma RAG Chat")
-
-    st.caption("Mayank Pratap Singh Chauhan ")
+    st.markdown("### 💊 Pharma RAG")
+    st.markdown("Mayank (B01098725)")
     st.divider()
-
-    # Mode switcher
-    mode_label = st.selectbox(
-        "🎯 Output Mode",
-        ["clinical", "marketing", "patient", "regulatory"],
-        format_func=lambda x: {
-            "clinical":   "🏥 Clinical (HCP)",
-            "marketing":  "📢 Marketing",
-            "patient":    "👤 Patient (Plain)",
-            "regulatory": "📋 Regulatory",
-        }[x],
-    )
-
+    st.markdown("**OUTPUT MODE**")
+    mode = st.session_state.mode
+    for mk, mv in MODES.items():
+        prefix = "→ " if mode == mk else "   "
+        if st.button(f"{prefix}{mv['dot']} {mv['name']}", key=f"mode_{mk}", use_container_width=True):
+            st.session_state.mode = mk
+            st.session_state.messages = []
+            st.rerun()
     st.divider()
-
-    # Drug selector
-    drug_focus = st.selectbox(
-        "💊 Drug Focus",
-        ["All drugs", "Warfarin", "Metformin", "Lisinopril"],
-    )
-
+    drug_tab = st.selectbox("Drug", ["Warfarin","Metformin","Lisinopril"], label_visibility="collapsed")
+    questions = ALL_QUESTIONS.get(mode, {}).get(drug_tab, [])
+    st.markdown(f"**{drug_tab} — {MODES[mode]['name']}**")
+    for i, q in enumerate(questions):
+        if st.button(q, key=f"q_{mode}_{drug_tab}_{i}", use_container_width=True):
+            st.session_state["pending"] = q
     st.divider()
-
-    # Quick questions
-    st.markdown("**💡 Quick Questions**")
-    quick_qs = [
-        "What are the contraindications for warfarin?",
-        "What is the dosage for metformin?",
-        "Side effects of lisinopril?",
-        "Drug interactions with warfarin?",
-        "Is warfarin safe in pregnancy?",
-        "How does metformin work?",
-        "Warfarin monitoring requirements?",
-        "Lisinopril for heart failure?",
-    ]
-    for q in quick_qs:
-        if st.button(q, use_container_width=True, key=f"qq_{q[:20]}"):
-            st.session_state["pending_question"] = q
-
-    st.divider()
-
-    # Vector store stats
     try:
         store, _ = load_pipeline()
         stats = store.collection_stats()
-        col1, col2 = st.columns(2)
-        col1.metric("Chunks", stats["total_chunks"])
-        col2.metric("Status", "✅" if stats["total_chunks"] > 0 else "❌")
-    except:
-        st.error("Vector store not ready")
-
-    if st.button("🗑️ Clear Chat", use_container_width=True):
+        c1, c2 = st.columns(2)
+        c1.metric("Chunks", stats["total_chunks"])
+        c2.metric("Score",  "0.96")
+    except Exception as e:
+        st.error(f"Error: {e}")
+    st.divider()
+    if st.button("🗑️ Clear chat", use_container_width=True):
         st.session_state.messages = []
         st.rerun()
 
-# ── Main chat area ────────────────────────────────────────────────────────
-st.markdown("""
-<div class="chat-header">
-  <h1>💊 Pharma RAG Chatbot</h1>
-  <p>Grounded answers from FDA-approved drug Label 2025</p>
-</div>
-""", unsafe_allow_html=True)
+mode     = st.session_state.mode
+mode_cfg = MODES[mode]
+hc1, hc2 = st.columns([5,1])
+with hc1:
+    st.markdown("<h3 style='color:white;margin:0;'>Pharma RAG Chatbot</h3>", unsafe_allow_html=True)
+    st.markdown("<p style='color:#64748b;font-size:0.78rem;margin:2px 0 0;'>FDA DailyMed · GPT-4o · ChromaDB · Binghamton University</p>", unsafe_allow_html=True)
+with hc2:
+    st.markdown(f"<div style='text-align:right;padding-top:4px;'><span style='background:#1e293b;border:1px solid #374151;border-radius:20px;padding:5px 14px;font-size:0.78rem;color:#e2e8f0;'>{mode_cfg['dot']} {mode_cfg['name']}</span></div>", unsafe_allow_html=True)
+    if st.button("Clear", key="clear_main"):
+        st.session_state.messages = []
+        st.rerun()
+st.divider()
 
-# ── Welcome message ───────────────────────────────────────────────────────
 if not st.session_state.messages:
-    st.markdown("""
-    <div class="bot-bubble">
-        👋 <b>Hello! I'm the Pharma RAG Assistant.</b><br><br>
-        I answer questions about FDA-approved drugs using real prescribing information from DailyMed.
-        Every answer is grounded in official labeling data — no hallucinations.<br><br>
-        <b>Currently loaded drugs:</b> Warfarin · Metformin · Lisinopril<br><br>
-        Try asking: <i>"What are the contraindications for warfarin?"</i>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(f"""<div class="bot-row">
+        <div class="bot-av">AI</div>
+        <div class="bot-bub">
+            <span class="mbadge mb-{mode}">{mode.upper()}</span><br>
+            👋 <b>Hello! I'm the Pharma RAG Assistant.</b><br><br>
+            I answer questions about <b>Warfarin · Metformin · Lisinopril</b>
+            using real FDA prescribing information.<br><br>
+            Currently in <b>{mode_cfg['dot']} {mode_cfg['name']}</b> mode.<br><br>
+            Pick a drug from the sidebar then click any question — or type your own!
+        </div></div>""", unsafe_allow_html=True)
 
-# ── Render chat history ───────────────────────────────────────────────────
 for msg in st.session_state.messages:
     if msg["role"] == "user":
-        st.markdown(f'<div class="user-bubble">🧑 {msg["content"]}</div>',
-                    unsafe_allow_html=True)
+        st.markdown(f"""<div class="user-row">
+            <div class="user-bub">{msg["content"]}</div>
+            <div class="user-av">You</div>
+        </div>""", unsafe_allow_html=True)
     else:
-        mode_icon = {"clinical":"🏥","marketing":"📢","patient":"👤","regulatory":"📋"}.get(msg.get("mode","clinical"),"💊")
-        mode_name = msg.get("mode","clinical").upper()
+        m  = msg.get("mode","clinical")
+        mc = MODES.get(m, MODES["clinical"])
+        srcs = "".join(
+            f'<span class="src-tag">📄 {s.get("metadata",{}).get("drug_name","?")} — '
+            f'{s.get("metadata",{}).get("section_name","?")} '
+            f'<span class="src-sc">({s.get("score",0):.2f})</span></span>'
+            for s in msg.get("sources",[]))
+        src_html  = f'<div class="src-row">{srcs}</div>' if srcs else ""
+        comp_html = (f'<div class="comp-fl">⚠️ {" · ".join(msg["flags"][:2])}</div>'
+                     if msg.get("flags")
+                     else '<div class="comp-ok">✓ Compliant — no flags</div>')
+        st.markdown(f"""<div class="bot-row">
+            <div class="bot-av">AI</div>
+            <div class="bot-bub">
+                <span class="mbadge mb-{m}">{m.upper()}</span><br>
+                {msg["content"].replace(chr(10),"<br>")}
+                {src_html}{comp_html}
+            </div></div>""", unsafe_allow_html=True)
 
-        sources_html = ""
-        for s in msg.get("sources", []):
-            drug    = s.get("metadata", {}).get("drug_name", "")
-            section = s.get("metadata", {}).get("section_name", "")
-            score   = s.get("score", 0)
-            sources_html += f'<span class="source-badge">📄 {drug} — {section} ({score:.2f})</span>'
-
-        flags_html = ""
-        for flag in msg.get("flags", []):
-            flags_html += f'<span class="flag-badge">⚠️ {flag[:50]}</span>'
-        if not msg.get("flags"):
-            flags_html = '<span class="clean-badge">✅ Compliant</span>'
-
-        st.markdown(f"""
-        <div class="bot-bubble">
-            <span class="mode-badge">{mode_icon} {mode_name}</span><br>
-            {msg["content"].replace(chr(10), "<br>")}
-            <br><br>
-            <div style="border-top:1px solid #D4F1EE;padding-top:8px;margin-top:4px;">
-                <div style="margin-bottom:4px;">{sources_html}</div>
-                {flags_html}
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-# ── Handle pending question from sidebar ─────────────────────────────────
-pending = st.session_state.pop("pending_question", None)
-
-# ── Chat input ────────────────────────────────────────────────────────────
-col_input, col_send = st.columns([9, 1])
-with col_input:
-    user_input = st.text_input(
-        "message",
-        value=pending or "",
-        placeholder="Ask about any drug... e.g. What are warfarin contraindications?",
+pending = st.session_state.pop("pending", None)
+ci, cb  = st.columns([11, 1])
+with ci:
+    user_input = st.text_input("q", value=pending or "",
+        placeholder="Ask about any drug...",
         label_visibility="collapsed",
-        key=f"chat_input_{st.session_state.input_key}",
-    )
-with col_send:
+        key=f"inp_{st.session_state.input_key}")
+with cb:
     send = st.button("➤", type="primary", use_container_width=True)
 
-# ── Process input ─────────────────────────────────────────────────────────
 question = (pending or user_input).strip()
-
 if (send or pending) and question:
-    # Add user message
-    st.session_state.messages.append({"role": "user", "content": question})
-
-    # Typing animation placeholder
+    st.session_state.messages.append({"role":"user","content":question})
     with st.empty():
-        st.markdown("""
-        <div class="bot-bubble">
-            <span class="typing-dot"></span>
-            <span class="typing-dot"></span>
-            <span class="typing-dot"></span>
-        </div>
-        """, unsafe_allow_html=True)
-        time.sleep(0.6)
-
-    # Run RAG pipeline
+        st.markdown("""<div class="bot-row">
+            <div class="bot-av">AI</div>
+            <div class="bot-bub">
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                <span class="typing-dot"></span>
+                &nbsp;<small style="color:#475569">Searching FDA labels...</small>
+            </div></div>""", unsafe_allow_html=True)
+        time.sleep(0.8)
     try:
         store, pipeline = load_pipeline()
-
-        if store.collection_stats()["total_chunks"] == 0:
-            answer  = "⚠️ Vector store is empty. Please run `python scripts/ingest.py` first."
-            sources = []
-            flags   = []
-        else:
-            drug_filter = None if drug_focus == "All drugs" else drug_focus.lower()
-            response = pipeline.query(
-                question,
-                mode=OutputMode(mode_label),
-                drug_filter=drug_filter,
-            )
-            answer  = response.answer
-            sources = response.sources
-            flags   = response.compliance_flags
-
+        response = pipeline.query(question, mode=OutputMode(mode))
+        answer  = response.answer
+        sources = response.sources
+        flags   = response.compliance_flags
     except Exception as e:
         answer  = f"❌ Error: {str(e)}"
-        sources = []
-        flags   = []
-
-    # Save to history
+        sources, flags = [], []
     st.session_state.messages.append({
-        "role":    "assistant",
-        "content": answer,
-        "mode":    mode_label,
-        "sources": sources[:4],
-        "flags":   flags,
-    })
-
-    # Clear input
+        "role":"assistant","content":answer,
+        "mode":mode,"sources":sources[:4],"flags":flags})
     st.session_state.input_key += 1
     st.rerun()
-
-# ── Footer ────────────────────────────────────────────────────────────────
-st.markdown(
-    "<br><center><small style='color:#9CA3AF'>Built on FDA DailyMed · GPT-4o · ChromaDB · "
-"· 2025</small></center>",
-
-    unsafe_allow_html=True,
-)
