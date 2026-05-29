@@ -22,7 +22,6 @@ if not os.environ.get('OPENAI_API_KEY'):
 
 from src.retrieval.vector_store import DrugLabelVectorStore
 from src.generation.rag_pipeline import PharmaRAGPipeline, OutputMode
-PharmaRAGPipeline, OutputMode
 st.set_page_config(
     page_title="Pharma RAG",
     page_icon="💊",
@@ -312,7 +311,7 @@ with st.sidebar:
     <div class="sb-header">
         <div class="sb-icon">💊</div>
         <p class="sb-title">Pharma RAG</p>
-        <p class="sb-sub">Mayank Pratap Singh Chauhan · B01098725<br>Advisor: Prof. Sujoy Sikdar · BU 2025</p>
+        <p class="sb-sub">Mayank Pratap Singh Chauhan </p>
     </div>
     """, unsafe_allow_html=True)
 
