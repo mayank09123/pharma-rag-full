@@ -4,19 +4,17 @@ Author: Mayank Pratap Singh Chauhan (B01098725)
 Advisor: Prof. Sujoy Sikdar
 Run: python -m streamlit run chatbot_app.py
 """
-import sys, os, time
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
 import streamlit as st
-
-# Load Streamlit Cloud secrets FIRST
+import os, time
 try:
     if hasattr(st, 'secrets'):
+        st.sidebar.success(f"Secrets found: {list(st.secrets.keys())}")
         for k, v in st.secrets.items():
             os.environ[str(k)] = str(v)
-except:
-    pass
-
+    else:
+        st.sidebar.error("No secrets object found")
+except Exception as e:
+    st.sidebar.error(f"Secrets error: {e}")
 from dotenv import load_dotenv
 load_dotenv()
 
