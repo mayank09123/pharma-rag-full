@@ -11,7 +11,4 @@ dist/
 build/
 .pytest_cache/
 .mypy_cache/
-.env
-.env
-.env
-.env
+.streamlit/secrets.toml
